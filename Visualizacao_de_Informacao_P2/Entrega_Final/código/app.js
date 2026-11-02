@@ -65,6 +65,26 @@ const status = document.querySelector("#status");
         `${label(row.country)} · ${row.shape} · related witness reports`,
       ),
     );
+    const intervalInput = document.querySelector("#playback-interval");
+    let intervalSeconds = 15;
+    try {
+      const saved = Number(localStorage.getItem("paranormal-witness-interval"));
+      if (Number.isInteger(saved) && saved >= 1 && saved <= 120)
+        intervalSeconds = saved;
+    } catch {}
+    intervalInput.value = intervalSeconds;
+    witnesses.setInterval(intervalSeconds);
+    intervalInput.addEventListener("change", () => {
+      const seconds = Number(intervalInput.value);
+      if (!intervalInput.value || !witnesses.setInterval(seconds)) {
+        intervalInput.value = intervalSeconds;
+        return;
+      }
+      intervalSeconds = seconds;
+      try {
+        localStorage.setItem("paranormal-witness-interval", String(seconds));
+      } catch {}
+    });
     for (const field of ["country", "shape"]) {
       const select = document.getElementById(field);
       [...new Set(rows.map((d) => d[field]))]

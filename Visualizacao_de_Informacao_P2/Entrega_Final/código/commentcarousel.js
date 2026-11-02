@@ -6,6 +6,7 @@ export function createWitnesses(onSelect = () => {}) {
     timer,
     hovered = false,
     focused = false;
+  let intervalSeconds = 15;
   const quote = document.querySelector("#quote"),
     meta = document.querySelector("#quote-meta");
   const previous = document.querySelector("#previous"),
@@ -42,14 +43,14 @@ export function createWitnesses(onSelect = () => {}) {
         index++;
         render();
         schedule();
-      }, 15000);
+      }, intervalSeconds * 1000);
   }
   function render() {
     previous.disabled = !rows.length || index === 0;
     next.disabled = !rows.length || index === rows.length - 1;
     playback.textContent =
       playing && index < rows.length - 1
-        ? "Playing in order · one account every 15 seconds · pauses while you read here"
+        ? `Playing in order · one account every ${intervalSeconds} seconds · pauses while you read here`
         : index === rows.length - 1 && rows.length > 0
           ? "End of this edition’s witness accounts"
           : "Paused · use Previous / Next or Play witnesses";
@@ -103,6 +104,14 @@ export function createWitnesses(onSelect = () => {}) {
     schedule();
   });
   return {
+    setInterval(seconds) {
+      if (!Number.isInteger(seconds) || seconds < 1 || seconds > 120)
+        return false;
+      intervalSeconds = seconds;
+      render();
+      schedule();
+      return true;
+    },
     setPlaying(value) {
       playing = value;
       render();

@@ -71,6 +71,23 @@
           ><span id="story-status" role="status">Preparing the edition…</span>
         </div>
         <div class="story-actions">
+          <label for="playback-interval"
+            >Interval (seconds)
+            <input
+              id="playback-interval"
+              type="number"
+              min="1"
+              max="120"
+              step="1"
+              value="15"
+              aria-describedby="interval-help"
+            />
+          </label>
+          <span id="interval-help" class="visually-hidden"
+            >Choose 1 to 120 seconds between witness accounts. Changing this
+            value restarts the waiting period without changing the current
+            account or playback state.</span
+          >
           <button id="story-overview" type="button" disabled>
             Show my edition</button
           ><button id="story-toggle" type="button" aria-pressed="false">
