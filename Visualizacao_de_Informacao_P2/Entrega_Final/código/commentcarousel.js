@@ -4,9 +4,7 @@ export function createWitnesses(onSelect = () => {}, onFocusEnd = () => {}) {
     index = 0,
     playing = false,
     selectionActive = false,
-    timer,
-    hovered = false,
-    focused = false;
+    timer;
   let intervalSeconds = 15,
     remainingMs = 15000,
     startedAt = null,
@@ -18,7 +16,6 @@ export function createWitnesses(onSelect = () => {}, onFocusEnd = () => {}) {
     meta = document.querySelector("#quote-meta");
   const previous = document.querySelector("#previous"),
     next = document.querySelector("#next");
-  const section = quote.closest("article");
   const scope = document.createElement("p");
   scope.id = "witness-scope";
   scope.className = "note";
@@ -72,11 +69,7 @@ export function createWitnesses(onSelect = () => {}, onFocusEnd = () => {}) {
   function schedule(reset = false) {
     stopClock();
     if (reset) remainingMs = intervalSeconds * 1000;
-    if (
-      playing &&
-      (selectionActive || (!hovered && !focused)) &&
-      (selectionActive || index < rows.length - 1)
-    ) {
+    if (playing && (selectionActive || index < rows.length - 1)) {
       startedAt = performance.now();
       timer = setTimeout(() => {
         stopClock();
@@ -102,7 +95,7 @@ export function createWitnesses(onSelect = () => {}, onFocusEnd = () => {}) {
     playback.textContent = selectionActive
       ? "Selected reports · the full 80,332-report sample returns when this interval ends"
       : playing && index < rows.length - 1
-        ? `Playing in order · one account every ${intervalSeconds} seconds · pauses while you read here`
+        ? `Playing in order · one account every ${intervalSeconds} seconds · use Pause all to stop`
         : index === rows.length - 1 && rows.length > 0
           ? "End of this edition’s witness accounts"
           : "Paused · use Previous / Next or Play witnesses";
@@ -139,23 +132,14 @@ export function createWitnesses(onSelect = () => {}, onFocusEnd = () => {}) {
       schedule(true);
     }
   });
-  section.addEventListener("pointerenter", () => {
-    hovered = true;
-    schedule();
-  });
-  section.addEventListener("pointerleave", () => {
-    hovered = false;
-    schedule();
-  });
-  section.addEventListener("focusin", () => {
-    focused = true;
-    schedule();
-  });
-  section.addEventListener("focusout", (event) => {
-    focused = section.contains(event.relatedTarget);
-    schedule();
-  });
   return {
+    advance() {
+      if (index < rows.length - 1) {
+        index++;
+        render();
+        schedule(true);
+      }
+    },
     setSelection(value) {
       selectionActive = value;
       schedule(true);

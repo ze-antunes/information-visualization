@@ -40,20 +40,18 @@ const status = document.querySelector("#status");
     }
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let selection = null,
-      playing = false,
-      beforeFocusPlaying = false;
+      playing = false;
     const banner = document.querySelector("#story-status");
     const toggle = document.querySelector("#story-toggle");
     const overviewButton = document.querySelector("#story-overview");
     const story = createStory({
       onChange(next) {
         const wasSelected = !!selection;
-        if (next && !selection) beforeFocusPlaying = playing;
         selection = next;
         update();
         if (next || wasSelected) {
           witnesses.setSelection(!!selection);
-          setPlaying(selection ? true : beforeFocusPlaying);
+          setPlaying(selection ? true : playing);
         }
       },
     });
@@ -69,9 +67,9 @@ const status = document.querySelector("#status");
           [row],
           `Event · ${row.city} · ${row.datetime} · ${row.shape}`,
         ),
-      () => restoreFullSample(),
+      () => restoreFullSample(true),
     );
-    function restoreFullSample() {
+    function restoreFullSample(advance = false) {
       Object.assign(state, {
         country: "",
         shape: "",
@@ -82,6 +80,7 @@ const status = document.querySelector("#status");
         document.getElementById(field).value = state[field];
       map.reset();
       story.overview();
+      if (advance === true && playing) witnesses.advance();
     }
     const intervalInput = document.querySelector("#playback-interval");
     let intervalSeconds = 15;
@@ -162,6 +161,7 @@ const status = document.querySelector("#status");
         document.getElementById(field).value = state[field];
       map.reset();
       story.overview();
+      if (advance === true && playing) witnesses.advance();
     });
     function selectCategory(key, members) {
       story.focus(
