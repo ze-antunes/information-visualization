@@ -43,7 +43,6 @@ const status = document.querySelector("#status");
       playing = false;
     const banner = document.querySelector("#story-status");
     const toggle = document.querySelector("#story-toggle");
-    const progress = document.querySelector("#story-progress");
     const overviewButton = document.querySelector("#story-overview");
     const story = createStory({
       onChange(next) {
@@ -176,7 +175,6 @@ const status = document.querySelector("#status");
       banner.textContent = selection
         ? `${selection.title} · selection held until you choose “Show my edition”`
         : "One edition · use the filters or select data to change this set";
-      progress.hidden = true;
       document.querySelector("#story").dataset.playing = String(playing);
       document.querySelector("#story").dataset.focused = String(!!selection);
     }

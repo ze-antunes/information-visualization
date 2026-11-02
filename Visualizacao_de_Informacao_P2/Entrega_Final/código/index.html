@@ -71,6 +71,7 @@
           ><span id="story-status" role="status">Preparing the edition…</span>
         </div>
         <div class="story-actions">
+          <output id="playback-countdown" aria-live="off">Paused · 15 s</output>
           <label for="playback-interval"
             >Interval (seconds)
             <input
@@ -94,7 +95,14 @@
             Play witnesses
           </button>
         </div>
-        <div class="story-track" aria-hidden="true">
+        <div
+          class="story-track"
+          role="progressbar"
+          aria-label="Time until the next witness account"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
           <div id="story-progress"></div>
         </div>
       </section>

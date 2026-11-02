@@ -609,3 +609,20 @@ html[data-motion="paused"] *::after {
   white-space: nowrap;
   border: 0;
 }
+
+.story-track {
+  display: block;
+  height: 4px;
+}
+#story-progress {
+  transition: none !important;
+  animation: none !important;
+}
+#playback-countdown {
+  font:
+    11px/1.5 Arial,
+    sans-serif;
+  align-self: center;
+  color: #655f54;
+  min-width: 105px;
+}
