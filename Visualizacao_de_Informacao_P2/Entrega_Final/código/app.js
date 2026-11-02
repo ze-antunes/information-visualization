@@ -2,6 +2,7 @@ import { normalize, filterRows, label } from "./data.js";
 import { createMap } from "./map.js";
 import { renderStream } from "./streamgraph.js";
 import { createWitnesses } from "./commentcarousel.js";
+import { createStory } from "./story.js";
 const status = document.querySelector("#status");
 (async () => {
   try {
@@ -37,8 +38,62 @@ const status = document.querySelector("#status");
       status.textContent =
         "World outline unavailable; sighting coordinates are still shown.";
     }
-    const map = createMap(world);
-    const witnesses = createWitnesses();
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let selection = null,
+      playing = !reducedMotion.matches,
+      scene = 0,
+      displayedSelection;
+    const banner = document.querySelector("#story-status");
+    const toggle = document.querySelector("#story-toggle");
+    const progress = document.querySelector("#story-progress");
+    const overviewButton = document.querySelector("#story-overview");
+    const story = createStory({
+      playing,
+      onChange(next) {
+        selection = next;
+        update();
+      },
+      onAdvance() {
+        if (document.hidden) return;
+        const base = filterRows(rows, state),
+          candidates = [];
+        for (const field of ["country", "shape"]) {
+          const groups = d3
+            .rollups(
+              base,
+              (v) => v,
+              (d) => d[field],
+            )
+            .sort((a, b) => b[1].length - a[1].length);
+          if (groups.length > 1)
+            groups.slice(0, 4).forEach(([key, members]) =>
+              candidates.push({
+                title: `${field === "country" ? "Country" : "Shape"}: ${label(key)}`,
+                members,
+              }),
+            );
+        }
+        if (candidates.length) {
+          const next = candidates[scene++ % candidates.length];
+          map.reset();
+          story.focus(next.members, next.title, "Auto tour");
+        } else story.overview();
+      },
+    });
+    const map = createMap(world, (cell) =>
+      story.focus(
+        cell.members,
+        `Map cluster · ${cell.count.toLocaleString("en")} reports · ${cell.shape}`,
+      ),
+    );
+    const witnesses = createWitnesses((row) =>
+      story.focus(
+        filterRows(rows, state).filter(
+          (d) => d.country === row.country && d.shape === row.shape,
+        ),
+        `${label(row.country)} · ${row.shape} · related witness reports`,
+      ),
+    );
     for (const field of ["country", "shape"]) {
       const select = document.getElementById(field);
       [...new Set(rows.map((d) => d[field]))]
@@ -51,7 +106,7 @@ const status = document.querySelector("#status");
         });
       select.addEventListener("change", () => {
         state[field] = select.value;
-        update();
+        story.overview();
       });
     }
     for (const field of ["from", "to"]) {
@@ -75,12 +130,12 @@ const status = document.querySelector("#status");
           return;
         }
         state[field] = value;
-        update();
+        story.overview();
       });
     }
     document.querySelector("#group").addEventListener("change", (event) => {
       state.group = event.target.value;
-      update();
+      story.overview();
     });
     document
       .querySelector("#filters")
@@ -97,19 +152,62 @@ const status = document.querySelector("#status");
       for (const field of ["country", "shape", "from", "to", "group"])
         document.getElementById(field).value = state[field];
       map.reset();
-      update();
+      story.overview();
     });
-    function selectCategory(key) {
-      if (state.group === "duration" || key === "Remaining categories") return;
-      state[state.group] = state[state.group] === key ? "" : key;
-      document.getElementById(state.group).value = state[state.group];
-      update();
+    function selectCategory(key, members) {
+      story.focus(
+        members,
+        `${state.group === "country" ? "Country" : state.group === "shape" ? "Shape" : "Duration"}: ${label(key)}`,
+      );
+    }
+    toggle.addEventListener("click", () => {
+      playing = !playing;
+      story.setPlaying(playing);
+      refreshBanner();
+    });
+    overviewButton.addEventListener("click", () => story.overview());
+    document.addEventListener("visibilitychange", () =>
+      story.setPlaying(playing && !document.hidden),
+    );
+    reducedMotion.addEventListener("change", (event) => {
+      if (event.matches) {
+        playing = false;
+        story.setPlaying(false);
+        refreshBanner();
+      }
+    });
+    function refreshBanner() {
+      toggle.textContent = playing ? "Pause tour" : "Play tour";
+      toggle.setAttribute("aria-pressed", String(playing));
+      overviewButton.disabled = !selection;
+      banner.textContent = selection
+        ? `${selection.source}: ${selection.title} · returning to your edition in 8 seconds`
+        : playing
+          ? "Live edition · exploring related reports automatically"
+          : "Your edition · automatic tour paused";
+      if (selection !== displayedSelection) {
+        displayedSelection = selection;
+        progress.classList.remove("running");
+        if (selection && !reducedMotion.matches) {
+          void progress.offsetWidth;
+          progress.classList.add("running");
+        }
+      }
+      document.querySelector("#story").dataset.playing = String(playing);
+      document.querySelector("#story").dataset.focused = String(!!selection);
     }
     function update() {
-      const filtered = filterRows(rows, state);
+      const base = filterRows(rows, state);
+      const filtered = selection
+        ? base.filter((d) => selection.members.has(d))
+        : base;
+      refreshBanner();
       const located = filtered.filter((d) => d.located).length;
       status.textContent = `${filtered.length.toLocaleString("en")} of ${rows.length.toLocaleString("en")} dated reports · ${state.from}–${state.to} · ${raw.length - rows.length} invalid dates excluded${world ? "" : " · World outline unavailable"}.`;
       const stats = document.querySelector("#stats");
+      const previous = [...stats.querySelectorAll("strong")].map((node) =>
+        Number(node.textContent.replaceAll(",", "")),
+      );
       stats.replaceChildren();
       [
         [filtered.length.toLocaleString("en"), "reports in this edition"],
@@ -118,7 +216,7 @@ const status = document.querySelector("#status");
           "reported shape categories",
         ],
         [located.toLocaleString("en"), "reports with valid coordinates"],
-      ].forEach(([value, name]) => {
+      ].forEach(([value, name], index) => {
         const item = document.createElement("div");
         item.className = "stat";
         const strong = document.createElement("strong");
@@ -127,6 +225,19 @@ const status = document.querySelector("#status");
         span.textContent = name;
         item.append(strong, span);
         stats.append(item);
+        if (!reducedMotion.matches && previous[index] !== undefined) {
+          const end = Number(String(value).replaceAll(",", ""));
+          d3.select(strong)
+            .transition()
+            .duration(650)
+            .tween("text", () => {
+              const interpolate = d3.interpolateNumber(previous[index], end);
+              return (t) =>
+                (strong.textContent = Math.round(interpolate(t)).toLocaleString(
+                  "en",
+                ));
+            });
+        }
       });
       map.update(filtered);
       document.querySelector("#map-note").textContent =
@@ -135,6 +246,18 @@ const status = document.querySelector("#status");
       witnesses.update(filtered);
     }
     update();
+    story.start();
+    window.setInterval(() => {
+      if (
+        playing &&
+        !document.hidden &&
+        !document.querySelector(
+          ".comments:hover, .comments:focus-within, .bottom article:first-child:hover, .bottom article:first-child:focus-within",
+        )
+      )
+        witnesses.next();
+    }, 5000);
+    window.addEventListener("pagehide", () => story.destroy(), { once: true });
   } catch (error) {
     status.textContent = `Unable to load the archive. ${error.message} Run a local HTTP server as described in README.`;
   }

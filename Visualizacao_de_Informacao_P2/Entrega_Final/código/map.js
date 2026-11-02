@@ -1,6 +1,6 @@
 import { mapCells, mapLayers, mapLayerIndex } from "./data.js";
 import { shapeIcon, shapeIcons, iconImage } from "./shapes.js";
-export function createMap(world) {
+export function createMap(world, onSelect = () => {}) {
   const W = 960,
     H = 510;
   const svg = d3
@@ -110,7 +110,7 @@ export function createMap(world) {
     "Original shape icons by José Antunes. The question mark covers other shapes and missing values; tooltips retain the reported category.";
   size.append(credit);
   function describe(d) {
-    return `${d.count.toLocaleString("en")} ${d.count === 1 ? "report" : "reports"}\nMost common shape: ${d.shape} (${d.shapeCount.toLocaleString("en")} of ${d.count.toLocaleString("en")})\nCentre: ${d.latitude.toFixed(3)}°, ${d.longitude.toFixed(3)}°${transform.k < 64 ? "\nSelect to zoom in." : "\nReports at the same coordinates remain grouped."}`;
+    return `${d.count.toLocaleString("en")} ${d.count === 1 ? "report" : "reports"}\nMost common shape: ${d.shape} (${d.shapeCount.toLocaleString("en")} of ${d.count.toLocaleString("en")})\nCentre: ${d.latitude.toFixed(3)}°, ${d.longitude.toFixed(3)}°${transform.k < 64 ? "\nSelect to explore related reports and zoom in." : "\nSelect to explore related reports. Reports at the same coordinates remain grouped."}`;
   }
   function showTooltip(event, d) {
     tooltip.textContent = describe(d);
@@ -122,8 +122,9 @@ export function createMap(world) {
     tooltip.style.top = `${Math.max(8, Math.min(top + 14, window.innerHeight - 180))}px`;
   }
   function reveal(event, d) {
-    if (transform.k >= 64) return;
     event.stopPropagation();
+    onSelect(d);
+    if (transform.k >= 64) return;
     const k = mapLayers[mapLayerIndex(transform.k) + 1].minZoom;
     const point = projection([d.longitude, d.latitude]);
     const next = d3.zoomIdentity
@@ -161,7 +162,7 @@ export function createMap(world) {
         (d) => `translate(${d.point}) scale(${1 / transform.k})`,
       )
       .attr("tabindex", 0)
-      .attr("role", transform.k < 64 ? "button" : "img")
+      .attr("role", "button")
       .attr("aria-label", (d) => describe(d).replaceAll("\n", ". "));
     markers
       .selectAll("circle")

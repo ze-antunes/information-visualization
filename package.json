@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Two University of Coimbra information visualization projects using D3.js",
   "scripts": {
-    "test": "node --test tests/data.test.js",
+    "test": "node --test tests/data.test.js tests/story.test.js",
     "start": "python -m http.server 8000 --bind 127.0.0.1"
   }
 }

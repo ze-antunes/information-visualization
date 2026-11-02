@@ -60,6 +60,29 @@
             disabled /></label
         ><button type="reset">Reset edition</button>
       </form>
+      <section
+        id="story"
+        class="story"
+        aria-label="Live data tour"
+        data-focused="false"
+      >
+        <div>
+          <span class="live-dot" aria-hidden="true"></span
+          ><span id="story-status" role="status"
+            >Preparing the live edition…</span
+          >
+        </div>
+        <div class="story-actions">
+          <button id="story-overview" type="button" disabled>
+            Show my edition</button
+          ><button id="story-toggle" type="button" aria-pressed="false">
+            Pause tour
+          </button>
+        </div>
+        <div class="story-track" aria-hidden="true">
+          <div id="story-progress"></div>
+        </div>
+      </section>
       <p id="status" role="status">Loading the archive…</p>
       <div id="stats" class="stats" aria-live="polite"></div>
       <section class="geo-section">
@@ -73,8 +96,9 @@
             shows how many reports it contains.
           </p>
           <p>
-            Scroll or use + / − to zoom. Select a cluster to explore it. Drag to
-            pan. Filters update every section of this edition.
+            Scroll or use + / − to zoom. Select a cluster for an eight-second
+            focus across the page and a closer view. Drag to pan. Filters update
+            every section of this edition.
           </p>
           <button id="reset-map" type="button">Reset map view</button>
           <div id="map-size"></div>
@@ -105,19 +129,23 @@
         <p class="note">
           The streamgraph shows yearly report counts. Band thickness represents
           volume; its vertical position has no numerical meaning. Hover or focus
-          a band for its total. In Country or Shape mode, select a band to
-          filter the edition.
+          a band for its total. Select any band for an eight-second focus across
+          this edition.
         </p>
         <div id="streamgraph"></div>
         <div id="legend" class="legend" aria-label="Streamgraph legend"></div>
         <p id="chart-detail" role="status">
-          Select a band to explore its reports.
+          Select a band for a temporary focus across the page.
         </p>
       </section>
       <section class="bottom">
         <article>
           <p class="kicker">03 / THE WITNESSES</p>
           <h3>In their own words.</h3>
+          <p class="note">
+            Select a witness account to explore reports with the same country
+            and shape.
+          </p>
           <blockquote id="quote">The archive is loading.</blockquote>
           <p id="quote-meta" class="note"></p>
           <div class="quote-controls">

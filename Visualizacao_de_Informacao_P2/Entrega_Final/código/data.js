@@ -124,9 +124,11 @@ export function mapCells(rows, degrees = 5) {
         longitude: 0,
         latitude: 0,
         shapes: new Map(),
+        members: [],
       });
     const cell = groups.get(key);
     cell.count++;
+    cell.members.push(d);
     cell.longitude += d.longitude;
     cell.latitude += d.latitude;
     cell.shapes.set(d.shape, (cell.shapes.get(d.shape) || 0) + 1);
@@ -137,6 +139,7 @@ export function mapCells(rows, degrees = 5) {
     )[0];
     return {
       key: cell.key,
+      members: cell.members,
       count: cell.count,
       longitude: cell.longitude / cell.count,
       latitude: cell.latitude / cell.count,

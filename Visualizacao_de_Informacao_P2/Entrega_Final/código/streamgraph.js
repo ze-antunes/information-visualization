@@ -1,4 +1,4 @@
-import { aggregateYears, label } from "./data.js";
+import { aggregateYears, label, durationGroup } from "./data.js";
 import { iconImage } from "./shapes.js";
 export function renderStream(rows, state, selectCategory, shapeColors) {
   const host = d3.select("#streamgraph");
@@ -56,8 +56,17 @@ export function renderStream(rows, state, selectCategory, shapeColors) {
   const describe = (key) => {
     detail.textContent = `${label(key)} · ${total(key).toLocaleString("en")} reports · ${state.from}–${state.to}`;
   };
-  const canSelect = (key) =>
-    state.group !== "duration" && key !== "Remaining categories";
+  const category = (d) =>
+    state.group === "duration" ? durationGroup(d) : d[state.group];
+  const focus = (key) =>
+    selectCategory(
+      key,
+      rows.filter((d) =>
+        key === "Remaining categories"
+          ? !keys.slice(0, -1).includes(category(d))
+          : category(d) === key,
+      ),
+    );
   const area = d3
     .area()
     .x((d) => x(d.data.year))
@@ -73,11 +82,11 @@ export function renderStream(rows, state, selectCategory, shapeColors) {
     .attr("stroke", "#f4f0e6")
     .attr("stroke-width", 0.4)
     .attr("tabindex", 0)
-    .attr("role", (d) => (canSelect(d.key) ? "button" : "img"))
+    .attr("role", "button")
     .attr(
       "aria-label",
       (d) =>
-        `${label(d.key)}: ${total(d.key)} reports${canSelect(d.key) ? ". Select to filter" : ""}`,
+        `${label(d.key)}: ${total(d.key)} reports. Select for an eight-second focus`,
     )
     .on("pointerenter", function (event, d) {
       describe(d.key);
@@ -87,11 +96,11 @@ export function renderStream(rows, state, selectCategory, shapeColors) {
       d3.select(this).attr("opacity", 1);
     })
     .on("focus", (event, d) => describe(d.key))
-    .on("click", (event, d) => selectCategory(d.key))
+    .on("click", (event, d) => focus(d.key))
     .on("keydown", (event, d) => {
-      if (canSelect(d.key) && (event.key === "Enter" || event.key === " ")) {
+      if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        selectCategory(d.key);
+        focus(d.key);
       }
     })
     .append("title")
@@ -103,6 +112,15 @@ export function renderStream(rows, state, selectCategory, shapeColors) {
         "d",
         (d) => `M${x(state.from) - 8},${y(d[0][0])}h16V${y(d[0][1])}h-16Z`,
       );
+  }
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    host.node().animate(
+      [
+        { opacity: 0.2, transform: "translateY(8px)" },
+        { opacity: 1, transform: "translateY(0)" },
+      ],
+      { duration: 600, easing: "ease-out" },
+    );
   }
   keys.forEach((key) => {
     const button = document.createElement("button");
@@ -120,7 +138,7 @@ export function renderStream(rows, state, selectCategory, shapeColors) {
     button.addEventListener("pointerenter", () => describe(key));
     button.addEventListener("click", () => {
       describe(key);
-      selectCategory(key);
+      focus(key);
     });
     legend.append(button);
   });

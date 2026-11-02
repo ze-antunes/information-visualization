@@ -473,3 +473,106 @@ footer p {
   stroke-linejoin: round;
   pointer-events: none;
 }
+
+.story {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 16px 0 20px;
+  border-bottom: 1px solid #aaa291;
+  font:
+    12px/1.6 Arial,
+    sans-serif;
+}
+.story[data-focused="true"] {
+  color: #8a3f28;
+}
+.story-actions {
+  display: flex;
+  gap: 8px;
+}
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 9px;
+  border-radius: 50%;
+  background: #ad4b37;
+  animation: live-pulse 2s ease-in-out infinite;
+}
+.story-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #ded6c7;
+}
+#story-progress {
+  width: 100%;
+  height: 100%;
+  background: #ad4b37;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+#story-progress.running {
+  animation: focus-countdown 8s linear forwards;
+}
+@keyframes focus-countdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+@keyframes live-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+#quote[role="button"] {
+  cursor: pointer;
+}
+#quote[role="button"]:hover {
+  color: #9e502a;
+}
+.sighting:hover image {
+  transform: scale(1.12);
+}
+.sighting image {
+  transition: transform 0.2s ease;
+}
+.sighting {
+  animation: cluster-appear 0.45s ease-out;
+}
+@keyframes cluster-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+#streamgraph:has(.band:hover) .band:not(:hover) {
+  opacity: 0.25;
+}
+.band {
+  transition: opacity 0.2s ease;
+}
+
+.story[data-playing="false"] .live-dot {
+  animation-play-state: paused;
+}
