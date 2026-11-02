@@ -1,4 +1,5 @@
 import { aggregateYears, label } from "./data.js";
+import { iconImage } from "./shapes.js";
 export function renderStream(rows, state, selectCategory, shapeColors) {
   const host = d3.select("#streamgraph");
   host.selectAll("*").remove();
@@ -108,6 +109,7 @@ export function renderStream(rows, state, selectCategory, shapeColors) {
     button.type = "button";
     const swatch = document.createElement("i");
     swatch.style.background = color(key);
+    if (state.group === "shape") button.append(iconImage(key));
     button.append(
       swatch,
       document.createTextNode(

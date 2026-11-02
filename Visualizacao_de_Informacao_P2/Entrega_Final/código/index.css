@@ -390,3 +390,43 @@ footer p {
     min-width: 650px;
   }
 }
+
+.shape-icon {
+  width: 23px;
+  height: 23px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.map-shape-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 8px;
+  margin: 20px 0;
+}
+.map-shape-legend span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.legend button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.legend button i {
+  margin-right: 0;
+}
+.sighting image {
+  filter: drop-shadow(0 0 1px #fffaf0);
+}
+@media (max-width: 800px) {
+  .map-shape-legend {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+#map-size > p {
+  font:
+    11px/1.6 Arial,
+    sans-serif;
+}

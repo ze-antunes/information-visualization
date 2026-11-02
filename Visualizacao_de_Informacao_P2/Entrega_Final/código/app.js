@@ -37,7 +37,7 @@ const status = document.querySelector("#status");
       status.textContent =
         "World outline unavailable; sighting coordinates are still shown.";
     }
-    const map = createMap(world, colors);
+    const map = createMap(world);
     const witnesses = createWitnesses();
     for (const field of ["country", "shape"]) {
       const select = document.getElementById(field);
@@ -130,7 +130,7 @@ const status = document.querySelector("#status");
       });
       map.update(filtered);
       document.querySelector("#map-note").textContent =
-        `${located.toLocaleString("en")} mapped reports · ${(filtered.length - located).toLocaleString("en")} without usable coordinates. Circle colours indicate shape; see each circle’s tooltip for the category.`;
+        `${located.toLocaleString("en")} mapped reports · ${(filtered.length - located).toLocaleString("en")} without usable coordinates. Icons show the most common shape in each cell; see tooltips for exact categories and counts.`;
       renderStream(filtered, state, selectCategory, colors);
       witnesses.update(filtered);
     }

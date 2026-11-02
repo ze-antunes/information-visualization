@@ -25,8 +25,8 @@ An interactive newspaper explores **80,332 UFO reports**, dated **1906–2014**,
 ![Sighting geography](docs/images/p2.png)
 
 - Shared country, shape and inclusive year filters update every view.
-- Map circles group reports into 5° geographic cells. Area represents count; colour shows the most common shape. A minimum radius keeps small groups visible. Size recalculates after filtering.
-- Local world outline, pan/zoom, reset and explicit map legend.
+- Original shape icons by José Antunes group reports into 5° geographic cells. Each drawing represents the most common shape. Icon bounding-box area scales with count, with a minimum size for readability; exact counts are in tooltips. Size recalculates after filtering. The question-mark artwork represents other or unknown categories without changing the underlying data.
+- Local world outline, pan/zoom, reset and an illustrated legend. Shape-mode streamgraph legends also use the original icons.
 - Streamgraph grouped by country, shape or duration, with complete year bins and a dynamic vertical domain.
 - Eight categories plus a **Remaining categories** bucket preserve the long tail. Duration uses ranges instead of selected exact values.
 - Select Country or Shape bands, or legend buttons, to filter the edition. Keyboard selection is supported.
