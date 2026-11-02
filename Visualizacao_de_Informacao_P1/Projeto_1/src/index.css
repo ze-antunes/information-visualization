@@ -238,3 +238,6 @@ summary:focus-visible {
     min-width: 620px;
   }
 }
+.chart-layout > div {
+  min-width: 0;
+}
