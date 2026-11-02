@@ -47,7 +47,7 @@ No frontend build, package installation or CDN connection is required. Serve the
 python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open **http://localhost:8000/**. Use HTTP rather than opening HTML files directly: CSV loading and JavaScript modules require a server. Serve the whole repository because both projects share `vendor/`. The UFO CSV is about 14 MB.
+Open <http://localhost:8000/>. Use HTTP rather than opening HTML files directly: CSV loading and JavaScript modules require a server. Serve the whole repository because both projects share `vendor/`. The UFO CSV is about 14 MB.
 
 Optional shortcuts with Node.js 22 or later:
 
