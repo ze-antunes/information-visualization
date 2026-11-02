@@ -40,44 +40,15 @@ const status = document.querySelector("#status");
     }
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let selection = null,
-      playing = !reducedMotion.matches,
-      scene = 0,
-      displayedSelection;
+      playing = false;
     const banner = document.querySelector("#story-status");
     const toggle = document.querySelector("#story-toggle");
     const progress = document.querySelector("#story-progress");
     const overviewButton = document.querySelector("#story-overview");
     const story = createStory({
-      playing,
       onChange(next) {
         selection = next;
         update();
-      },
-      onAdvance() {
-        if (document.hidden) return;
-        const base = filterRows(rows, state),
-          candidates = [];
-        for (const field of ["country", "shape"]) {
-          const groups = d3
-            .rollups(
-              base,
-              (v) => v,
-              (d) => d[field],
-            )
-            .sort((a, b) => b[1].length - a[1].length);
-          if (groups.length > 1)
-            groups.slice(0, 4).forEach(([key, members]) =>
-              candidates.push({
-                title: `${field === "country" ? "Country" : "Shape"}: ${label(key)}`,
-                members,
-              }),
-            );
-        }
-        if (candidates.length) {
-          const next = candidates[scene++ % candidates.length];
-          map.reset();
-          story.focus(next.members, next.title, "Auto tour");
-        } else story.overview();
       },
     });
     const map = createMap(world, (cell) =>
@@ -160,39 +131,32 @@ const status = document.querySelector("#status");
         `${state.group === "country" ? "Country" : state.group === "shape" ? "Shape" : "Duration"}: ${label(key)}`,
       );
     }
-    toggle.addEventListener("click", () => {
-      playing = !playing;
-      story.setPlaying(playing);
+    function setPlaying(value) {
+      playing = value;
+      witnesses.setPlaying(playing && !document.hidden);
+      document.documentElement.dataset.motion = playing ? "playing" : "paused";
+      if (!playing) {
+        document.getAnimations().forEach((animation) => animation.cancel());
+        d3.select("#map svg").interrupt();
+      }
       refreshBanner();
-    });
+    }
+    toggle.addEventListener("click", () => setPlaying(!playing));
     overviewButton.addEventListener("click", () => story.overview());
     document.addEventListener("visibilitychange", () =>
-      story.setPlaying(playing && !document.hidden),
+      witnesses.setPlaying(playing && !document.hidden),
     );
     reducedMotion.addEventListener("change", (event) => {
-      if (event.matches) {
-        playing = false;
-        story.setPlaying(false);
-        refreshBanner();
-      }
+      if (event.matches) setPlaying(false);
     });
     function refreshBanner() {
-      toggle.textContent = playing ? "Pause tour" : "Play tour";
+      toggle.textContent = playing ? "Pause all" : "Play witnesses";
       toggle.setAttribute("aria-pressed", String(playing));
       overviewButton.disabled = !selection;
       banner.textContent = selection
-        ? `${selection.source}: ${selection.title} · returning to your edition in 8 seconds`
-        : playing
-          ? "Live edition · exploring related reports automatically"
-          : "Your edition · automatic tour paused";
-      if (selection !== displayedSelection) {
-        displayedSelection = selection;
-        progress.classList.remove("running");
-        if (selection && !reducedMotion.matches) {
-          void progress.offsetWidth;
-          progress.classList.add("running");
-        }
-      }
+        ? `${selection.title} · selection held until you choose “Show my edition”`
+        : "One edition · use the filters or select data to change this set";
+      progress.hidden = true;
       document.querySelector("#story").dataset.playing = String(playing);
       document.querySelector("#story").dataset.focused = String(!!selection);
     }
@@ -205,9 +169,6 @@ const status = document.querySelector("#status");
       const located = filtered.filter((d) => d.located).length;
       status.textContent = `${filtered.length.toLocaleString("en")} of ${rows.length.toLocaleString("en")} dated reports · ${state.from}–${state.to} · ${raw.length - rows.length} invalid dates excluded${world ? "" : " · World outline unavailable"}.`;
       const stats = document.querySelector("#stats");
-      const previous = [...stats.querySelectorAll("strong")].map((node) =>
-        Number(node.textContent.replaceAll(",", "")),
-      );
       stats.replaceChildren();
       [
         [filtered.length.toLocaleString("en"), "reports in this edition"],
@@ -216,7 +177,7 @@ const status = document.querySelector("#status");
           "reported shape categories",
         ],
         [located.toLocaleString("en"), "reports with valid coordinates"],
-      ].forEach(([value, name], index) => {
+      ].forEach(([value, name]) => {
         const item = document.createElement("div");
         item.className = "stat";
         const strong = document.createElement("strong");
@@ -225,19 +186,6 @@ const status = document.querySelector("#status");
         span.textContent = name;
         item.append(strong, span);
         stats.append(item);
-        if (!reducedMotion.matches && previous[index] !== undefined) {
-          const end = Number(String(value).replaceAll(",", ""));
-          d3.select(strong)
-            .transition()
-            .duration(650)
-            .tween("text", () => {
-              const interpolate = d3.interpolateNumber(previous[index], end);
-              return (t) =>
-                (strong.textContent = Math.round(interpolate(t)).toLocaleString(
-                  "en",
-                ));
-            });
-        }
       });
       map.update(filtered);
       document.querySelector("#map-note").textContent =
@@ -245,19 +193,16 @@ const status = document.querySelector("#status");
       renderStream(filtered, state, selectCategory, colors);
       witnesses.update(filtered);
     }
+    setPlaying(false);
     update();
-    story.start();
-    window.setInterval(() => {
-      if (
-        playing &&
-        !document.hidden &&
-        !document.querySelector(
-          ".comments:hover, .comments:focus-within, .bottom article:first-child:hover, .bottom article:first-child:focus-within",
-        )
-      )
-        witnesses.next();
-    }, 5000);
-    window.addEventListener("pagehide", () => story.destroy(), { once: true });
+    window.addEventListener(
+      "pagehide",
+      () => {
+        story.destroy();
+        witnesses.destroy();
+      },
+      { once: true },
+    );
   } catch (error) {
     status.textContent = `Unable to load the archive. ${error.message} Run a local HTTP server as described in README.`;
   }

@@ -63,20 +63,18 @@
       <section
         id="story"
         class="story"
-        aria-label="Live data tour"
+        aria-label="Witness playback"
         data-focused="false"
       >
         <div>
           <span class="live-dot" aria-hidden="true"></span
-          ><span id="story-status" role="status"
-            >Preparing the live edition…</span
-          >
+          ><span id="story-status" role="status">Preparing the edition…</span>
         </div>
         <div class="story-actions">
           <button id="story-overview" type="button" disabled>
             Show my edition</button
           ><button id="story-toggle" type="button" aria-pressed="false">
-            Pause tour
+            Play witnesses
           </button>
         </div>
         <div class="story-track" aria-hidden="true">
@@ -96,9 +94,9 @@
             shows how many reports it contains.
           </p>
           <p>
-            Scroll or use + / − to zoom. Select a cluster for an eight-second
-            focus across the page and a closer view. Drag to pan. Filters update
-            every section of this edition.
+            Scroll or use + / − to zoom. Select a cluster to hold its related
+            reports across the page and get a closer view. Drag to pan. Filters
+            update every section of this edition.
           </p>
           <button id="reset-map" type="button">Reset map view</button>
           <div id="map-size"></div>
@@ -129,13 +127,13 @@
         <p class="note">
           The streamgraph shows yearly report counts. Band thickness represents
           volume; its vertical position has no numerical meaning. Hover or focus
-          a band for its total. Select any band for an eight-second focus across
-          this edition.
+          a band for its total. Select any band to hold its related reports
+          across this edition.
         </p>
         <div id="streamgraph"></div>
         <div id="legend" class="legend" aria-label="Streamgraph legend"></div>
         <p id="chart-detail" role="status">
-          Select a band for a temporary focus across the page.
+          Select a band to hold its related reports across the page.
         </p>
       </section>
       <section class="bottom">

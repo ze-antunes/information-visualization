@@ -576,3 +576,17 @@ footer p {
 .story[data-playing="false"] .live-dot {
   animation-play-state: paused;
 }
+
+.live-dot,
+.sighting {
+  animation: none;
+}
+.story-track {
+  display: none;
+}
+html[data-motion="paused"] *,
+html[data-motion="paused"] *::before,
+html[data-motion="paused"] *::after {
+  animation: none !important;
+  transition: none !important;
+}

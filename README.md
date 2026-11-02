@@ -31,10 +31,10 @@ An interactive newspaper explores **80,332 UFO reports**, dated **1906–2014**,
 - Local world outline, pan/zoom, reset and an illustrated legend. Shape-mode streamgraph legends also use the original icons.
 - Streamgraph grouped by country, shape or duration, with complete year bins and a dynamic vertical domain.
 - Eight categories plus a **Remaining categories** bucket preserve the long tail. Duration uses ranges instead of selected exact values.
-- Selecting any streamgraph band or legend (including duration and remaining categories), a map cluster or a witness account focuses all views on its related reports for **8 seconds**, then restores the edition defined by the persistent filters. New clicks replace the pending focus; changing a filter clears it.
-- An automatic tour alternates an 8-second country/shape focus with 6 seconds of the complete filtered edition. **Pause tour / Play tour** controls automatic exploration; **Show my edition** clears a focus immediately. Manual selections still expire when the tour is paused. Automatic exploration pauses in a hidden tab and starts paused for reduced-motion preferences.
-- Animated counters, streamgraph transitions, cluster entrances and witness rotation bring the edition to life. Testimony rotates every 5 seconds while the tour plays, pausing while the reader hovers or focuses its section. Motion effects respect reduced-motion preferences. Keyboard selection is supported.
-- Witness comments load once and support automatic rotation and manual previous/next controls. Dataset text is inserted as text rather than executable HTML.
+- Selecting a streamgraph band or legend, map cluster or witness account holds its related reports across all views. The selection remains until **Show my edition** or a filter change; playback never changes the dataset.
+- The edition starts **fully paused**. **Play witnesses** advances accounts sequentially every **15 seconds**, keeping the same denominator and dataset. **Pause all** stops playback completely. Hovering or focusing the witness section temporarily suspends advancement. Previous/Next follow the same sequence without wrapping at either end.
+- Chart redraws preserve the current witness and position when the dataset is unchanged. Counters display exact values immediately. No automatic country/shape tours, timed selection resets or decorative looping animations remain.
+- Witness comments load once and support optional sequential playback and manual previous/next controls. Dataset text is inserted as text rather than executable HTML.
 - Empty states, loading errors and year-range validation.
 
 Entry: [The Paranormal](Visualizacao_de_Informacao_P2/Entrega_Final/código/index.html).

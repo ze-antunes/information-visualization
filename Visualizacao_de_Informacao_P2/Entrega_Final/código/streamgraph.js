@@ -86,7 +86,7 @@ export function renderStream(rows, state, selectCategory, shapeColors) {
     .attr(
       "aria-label",
       (d) =>
-        `${label(d.key)}: ${total(d.key)} reports. Select for an eight-second focus`,
+        `${label(d.key)}: ${total(d.key)} reports. Select to hold related reports`,
     )
     .on("pointerenter", function (event, d) {
       describe(d.key);
@@ -113,7 +113,10 @@ export function renderStream(rows, state, selectCategory, shapeColors) {
         (d) => `M${x(state.from) - 8},${y(d[0][0])}h16V${y(d[0][1])}h-16Z`,
       );
   }
-  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (
+    document.documentElement.dataset.motion !== "paused" &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
     host.node().animate(
       [
         { opacity: 0.2, transform: "translateY(8px)" },
