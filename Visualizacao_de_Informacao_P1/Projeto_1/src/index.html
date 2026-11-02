@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="A D3.js study of power, weight and acceleration in 406 classic cars."
+    />
+    <title>Car Goes Brrr — Power & weight</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <main>
+      <nav>
+        <a href="../../../index.html">← Information Visualization</a
+        ><span>01 / VISUALIZING FACTS</span>
+      </nav>
+      <header>
+        <p class="eyebrow">CAR GOES BRRR / 1970—1982</p>
+        <h1>Less weight.<br />More power.</h1>
+        <p class="standfirst">
+          Which car has the best power-to-weight ratio? A portrait of classic
+          cars, through horsepower, weight and time to accelerate.
+        </p>
+      </header>
+      <section class="chart-layout" aria-label="Power and weight">
+        <div>
+          <div class="chart-heading">
+            <h2>Power meets weight</h2>
+            <span>Each circle is one car</span>
+          </div>
+          <div
+            id="chart"
+            role="img"
+            aria-label="Scatterplot of horsepower against weight, colored by origin, with circle area encoding acceleration time"
+          ></div>
+          <p id="status" role="status">Loading the cars…</p>
+        </div>
+        <aside>
+          <h2>How to read it</h2>
+          <p>
+            Look towards the upper left for more horsepower per pound. Dashed
+            lines connect points with the same ratio.
+          </p>
+          <h3>Origin</h3>
+          <div id="origin-legend"></div>
+          <h3>Time to accelerate · seconds</h3>
+          <svg
+            id="size-legend"
+            viewBox="0 0 240 65"
+            aria-label="Circle size legend"
+          ></svg>
+          <p class="small">
+            Area encodes acceleration time: a larger circle means a longer time,
+            not faster acceleration.
+          </p>
+          <div class="finding">
+            <p class="eyebrow">A NOTE ON THE DATA</p>
+            <p>
+              The Ford Grenada l is recorded at just <strong>283 lb</strong>.
+              This suspicious value is shown as a hollow circle and excluded
+              from the ranking below. The original record is preserved.
+            </p>
+          </div>
+        </aside>
+      </section>
+      <section class="ranking">
+        <div>
+          <p class="eyebrow">READING THE RESULT</p>
+          <h2>The highest ratios<br />in this file.</h2>
+          <p>
+            Horsepower ÷ weight × 1,000. This is a comparison within the
+            supplied dataset, rather than a verified performance ranking.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <caption>
+              Top five records, excluding the flagged weight
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Car / model year</th>
+                <th scope="col">hp</th>
+                <th scope="col">lb</th>
+                <th scope="col">hp / 1,000 lb</th>
+              </tr>
+            </thead>
+            <tbody id="ranking"></tbody>
+          </table>
+        </div>
+      </section>
+      <details>
+        <summary>Data & methodology</summary>
+        <p>
+          406 records from the course file cars_alterado.csv. Weight is in
+          pounds and power in horsepower. The acceleration field is interpreted
+          as time in seconds, consistent with the Auto MPG family of datasets;
+          the supplied file has no data dictionary. Values were modified during
+          the original assignment, including missing horsepower values. No
+          further corrections have been made to the source file.
+        </p>
+        <p>
+          <a href="../cars_alterado.csv" download
+            >Download the original course CSV</a
+          >
+          ·
+          <a href="https://archive.ics.uci.edu/dataset/9/auto+mpg"
+            >Auto MPG reference</a
+          >
+        </p>
+      </details>
+      <footer>
+        <strong>Ana Inês França & José Antunes</strong>
+        <p>
+          Information Visualization · Design and Multimedia · University of
+          Coimbra · 2022/23<br />Guided by Catarina Maçãs and Evgheni Polisciuc.
+        </p>
+      </footer>
+    </main>
+    <script src="../../../vendor/d3.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

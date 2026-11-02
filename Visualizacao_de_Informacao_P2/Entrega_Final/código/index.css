@@ -1,0 +1,392 @@
+@font-face {
+  font-family: Garamond;
+  src: url("./EB_Garamond/static/EBGaramond-Regular.ttf");
+}
+@font-face {
+  font-family: Garamond;
+  src: url("./EB_Garamond/static/EBGaramond-Bold.ttf");
+  font-weight: 700;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: #f4f0e6;
+  color: #24231f;
+  font-family: Garamond, Georgia, serif;
+}
+main {
+  max-width: 1460px;
+  padding: 28px 4vw;
+  margin: auto;
+}
+nav {
+  display: flex;
+  justify-content: space-between;
+  font:
+    10px Arial,
+    sans-serif;
+  letter-spacing: 1px;
+  padding-bottom: 30px;
+}
+a {
+  color: inherit;
+  text-underline-offset: 4px;
+}
+.masthead {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+.masthead h1 {
+  font-size: clamp(50px, 7.3vw, 110px);
+  line-height: 1;
+  margin: 0 0 24px;
+  letter-spacing: -4px;
+}
+.masthead p {
+  font-size: 16px;
+  font-style: italic;
+}
+.edition {
+  border-top: 4px solid;
+  border-bottom: 1px solid;
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font:
+    10px Arial,
+    sans-serif;
+  letter-spacing: 1px;
+}
+.intro {
+  text-align: center;
+  padding: 40px 0 30px;
+  max-width: 850px;
+  margin: auto;
+}
+.kicker {
+  font:
+    10px Arial,
+    sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+.intro h2 {
+  font-size: clamp(46px, 6vw, 82px);
+  line-height: 1;
+  letter-spacing: -2px;
+  margin: 22px 0;
+}
+.byline {
+  font-style: italic;
+  font-size: 18px;
+}
+.lead {
+  font-size: 22px;
+  line-height: 1.5;
+  max-width: 660px;
+  margin: 20px auto;
+}
+.filters {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 22px 0;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font:
+    11px Arial,
+    sans-serif;
+}
+select,
+input,
+button {
+  font:
+    12px Arial,
+    sans-serif;
+  background: transparent;
+  color: inherit;
+  border: 1px solid #a29d91;
+  border-radius: 0;
+  padding: 10px;
+  min-height: 38px;
+}
+select {
+  max-width: 220px;
+}
+input {
+  width: 100px;
+}
+button {
+  cursor: pointer;
+}
+button:hover {
+  background: #e4ddce;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #9e502a;
+  outline-offset: 3px;
+}
+#status {
+  font:
+    12px Arial,
+    sans-serif;
+  line-height: 1.7;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 3px double;
+  padding: 15px 0 24px;
+  gap: 20px;
+}
+.stat {
+  border-right: 1px solid #aaa291;
+  padding-right: 20px;
+}
+.stat:last-child {
+  border: 0;
+}
+.stat strong {
+  font-size: 40px;
+  display: block;
+  line-height: 1.1;
+}
+.stat span {
+  font:
+    10px Arial,
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.geo-section {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 36px;
+  padding: 35px 0;
+  border-bottom: 1px solid;
+}
+h3 {
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: -0.7px;
+  margin: 16px 0;
+}
+aside p,
+.bottom p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+.note {
+  font:
+    12px/1.65 Arial,
+    sans-serif !important;
+  color: #655f54;
+}
+svg {
+  width: 100%;
+  display: block;
+}
+#map {
+  background: #eae7dd;
+  border: 1px solid #d1cbbb;
+}
+#map svg {
+  touch-action: none;
+}
+.timeline {
+  padding: 30px 0;
+  border-bottom: 3px double;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.legend {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.legend button {
+  padding: 7px 9px;
+  min-height: 32px;
+}
+.legend i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 7px;
+  border-radius: 50%;
+}
+#chart-detail {
+  font:
+    12px Arial,
+    sans-serif;
+  min-height: 18px;
+}
+.bottom {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 65px;
+  padding: 34px 0;
+}
+.bottom article + article {
+  border-left: 1px solid #aaa291;
+  padding-left: 35px;
+}
+blockquote {
+  font-size: 27px;
+  line-height: 1.4;
+  margin: 20px 0;
+  overflow-wrap: anywhere;
+}
+.quote-controls {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  font:
+    11px Arial,
+    sans-serif;
+}
+footer {
+  border-top: 4px solid;
+  padding-top: 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+}
+footer strong {
+  font-size: 28px;
+}
+footer p {
+  font:
+    11px/1.7 Arial,
+    sans-serif;
+  margin: 0;
+}
+#tooltip {
+  position: fixed;
+  pointer-events: none;
+  max-width: 260px;
+  padding: 12px;
+  background: #24231f;
+  color: #fff;
+  font:
+    12px/1.6 Arial,
+    sans-serif;
+  z-index: 10;
+  white-space: pre-line;
+}
+.tick text {
+  font:
+    11px Arial,
+    sans-serif;
+  fill: #655f54;
+}
+.tick line,
+.domain {
+  stroke: #aca694;
+}
+#map-size {
+  font:
+    11px/1.6 Arial,
+    sans-serif;
+  margin-top: 16px;
+}
+@media (max-width: 800px) {
+  main {
+    padding: 20px;
+  }
+  .masthead {
+    display: block;
+  }
+  .masthead p {
+    display: none;
+  }
+  .masthead h1 {
+    letter-spacing: -2px;
+  }
+  .edition span:nth-child(2),
+  nav span {
+    display: none;
+  }
+  .geo-section,
+  .bottom {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .bottom article + article {
+    border-left: 0;
+    border-top: 1px solid;
+    padding: 20px 0;
+  }
+  aside h3 br {
+    display: none;
+  }
+  aside p {
+    font-size: 16px;
+  }
+  .stats strong {
+    font-size: 30px;
+  }
+  footer {
+    flex-direction: column;
+  }
+  .section-head {
+    align-items: start;
+  }
+  .intro {
+    padding-top: 24px;
+  }
+}
+@media print {
+  .filters,
+  button,
+  nav {
+    display: none;
+  }
+  body {
+    background: white;
+  }
+  main {
+    padding: 0;
+  }
+  .geo-section {
+    grid-template-columns: 200px 1fr;
+  }
+  section {
+    break-inside: avoid;
+  }
+  .masthead h1 {
+    font-size: 65px;
+  }
+}
+@media (max-width: 600px) {
+  #streamgraph {
+    overflow-x: auto;
+  }
+  #streamgraph svg {
+    min-width: 650px;
+  }
+}

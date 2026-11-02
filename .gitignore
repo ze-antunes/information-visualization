@@ -1,0 +1,11 @@
+.work/
+node_modules/
+test-results/
+playwright-report/
+__pycache__/
+.DS_Store
+Thumbs.db
+*.log
+
+# Keep the original presentation locally; larger than GitHub's per-file limit.
+*.mp4

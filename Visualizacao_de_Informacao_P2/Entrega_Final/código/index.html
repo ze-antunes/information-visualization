@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="The Paranormal: an interactive data newspaper exploring UFO sighting reports with D3.js."
+    />
+    <title>The Paranormal — A newspaper of sightings</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <main>
+      <nav>
+        <a href="../../../index.html">← Information Visualization</a
+        ><span>A DATA NEWSPAPER / ARCHIVE EDITION</span>
+      </nav>
+      <header class="masthead">
+        <p>“You saw the truth,<br />we tell the story.”</p>
+        <h1>The Paranormal</h1>
+        <p>Independent observations.<br />Extraordinary questions.</p>
+      </header>
+      <div class="edition">
+        <span>VOL. I · No. 1</span
+        ><span>INFORMATION VISUALIZATION · COIMBRA</span><span>EST. 2022</span>
+      </div>
+      <section class="intro">
+        <p class="kicker">AN INVESTIGATION OF THE UNEXPLAINED</p>
+        <h2>What do we know<br />about UFO sightings?</h2>
+        <p class="byline">By Ana Inês França and José Antunes</p>
+        <p class="lead">
+          Thousands of reports. Decades of looking up. Explore where sightings
+          were reported, how their shapes changed over time, and the stories
+          witnesses left behind.
+        </p>
+      </section>
+      <form id="filters" class="filters" aria-label="Filter sighting reports">
+        <label
+          >Country<select id="country">
+            <option value="">All countries</option>
+          </select></label
+        ><label
+          >Shape<select id="shape">
+            <option value="">All shapes</option>
+          </select></label
+        ><label
+          >From year<input
+            id="from"
+            type="number"
+            step="1"
+            required
+            disabled /></label
+        ><label
+          >To year<input
+            id="to"
+            type="number"
+            step="1"
+            required
+            disabled /></label
+        ><button type="reset">Reset edition</button>
+      </form>
+      <p id="status" role="status">Loading the archive…</p>
+      <div id="stats" class="stats" aria-live="polite"></div>
+      <section class="geo-section">
+        <aside>
+          <p class="kicker">01 / THE GEOGRAPHY</p>
+          <h3>A world of<br />reported encounters.</h3>
+          <p>
+            Each circle groups reports in a 5° longitude × 5° latitude cell. Its
+            area represents the number of reports; its colour shows the most
+            frequently reported shape in that cell.
+          </p>
+          <p>
+            Scroll to zoom. Drag to explore. Filters update every section of
+            this edition.
+          </p>
+          <button id="reset-map" type="button">Reset map view</button>
+          <div id="map-size"></div>
+          <p class="note">
+            Reports reflect this archive’s coverage and reporting habits. They
+            do not measure the prevalence of unexplained events.
+          </p>
+        </aside>
+        <div>
+          <div id="map"></div>
+          <p id="map-note" class="note"></p>
+        </div>
+      </section>
+      <section class="timeline">
+        <div class="section-head">
+          <div>
+            <p class="kicker">02 / THROUGH THE YEARS</p>
+            <h3>The shape of the archive.</h3>
+          </div>
+          <label
+            >Group reports by<select id="group">
+              <option value="country">Country</option>
+              <option value="shape">Shape</option>
+              <option value="duration">Duration</option>
+            </select></label
+          >
+        </div>
+        <p class="note">
+          The streamgraph shows yearly report counts. Band thickness represents
+          volume; its vertical position has no numerical meaning. Hover or focus
+          a band for its total. In Country or Shape mode, select a band to
+          filter the edition.
+        </p>
+        <div id="streamgraph"></div>
+        <div id="legend" class="legend" aria-label="Streamgraph legend"></div>
+        <p id="chart-detail" role="status">
+          Select a band to explore its reports.
+        </p>
+      </section>
+      <section class="bottom">
+        <article>
+          <p class="kicker">03 / THE WITNESSES</p>
+          <h3>In their own words.</h3>
+          <blockquote id="quote">The archive is loading.</blockquote>
+          <p id="quote-meta" class="note"></p>
+          <div class="quote-controls">
+            <button id="previous" type="button">← Previous</button
+            ><span id="quote-count"></span
+            ><button id="next" type="button">Next →</button>
+          </div>
+        </article>
+        <article>
+          <p class="kicker">AN EDITOR’S NOTE</p>
+          <h3>Reports, not proof.</h3>
+          <p>
+            This archive contains self-reported observations, not verified
+            evidence of extraterrestrial activity. Country and shape can be
+            missing; unknown values remain visible rather than being silently
+            discarded.
+          </p>
+          <p>
+            Dates use the month/day/year format supplied in the CSV. Invalid
+            years are excluded. Reports without valid coordinates still
+            contribute to the streamgraph and witness section.
+          </p>
+          <p>
+            <a href="UFO_sights.csv" download
+              >Download the supplied archive ↗</a
+            >
+          </p>
+          <p class="note">
+            Dataset supplied for the 2022/23 course. Names, dates, shapes and
+            comments follow the supplied archive; observations have not been
+            independently verified.
+          </p>
+        </article>
+      </section>
+      <footer>
+        <strong>The Paranormal</strong>
+        <p>
+          Design and Multimedia · University of Coimbra · 2022/23<br />Guided by
+          Catarina Maçãs and Evgheni Polisciuc.
+        </p>
+        <p>
+          Concept & visual design: Ana Inês França<br />Original development:
+          José Antunes
+        </p>
+      </footer>
+    </main>
+    <div id="tooltip" role="tooltip" hidden></div>
+    <script src="../../../vendor/d3.min.js"></script>
+    <script src="../../../vendor/topojson-client.min.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

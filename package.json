@@ -1,0 +1,11 @@
+{
+  "name": "information-visualization",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Two University of Coimbra information visualization projects using D3.js",
+  "scripts": {
+    "test": "node --test tests/data.test.js",
+    "start": "python -m http.server 8000 --bind 127.0.0.1"
+  }
+}

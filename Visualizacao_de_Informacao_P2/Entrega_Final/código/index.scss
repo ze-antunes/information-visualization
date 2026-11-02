@@ -1,0 +1,21 @@
+@import 'sass/config';
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 40px;
+    font-family: 'EB_Garamond_Regular';
+}
+
+@import 'sass/header';
+@import 'sass/separator';
+@import 'sass/intro';
+@import 'sass/commentscarousel';
+@import 'sass/map';
+@import 'sass/streamgraph';
+@import 'sass/radio_buttons';
+@import 'sass/main';

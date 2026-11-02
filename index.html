@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Visualização de Informação — José Antunes & Ana Inês França</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f4f3ed;
+        color: #252a25;
+        font:
+          17px/1.6 Arial,
+          sans-serif;
+      }
+      main {
+        max-width: 1100px;
+        margin: auto;
+        padding: 7vw 5vw;
+      }
+      small {
+        font-size: 11px;
+        letter-spacing: 2px;
+      }
+      h1 {
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 1.05;
+        letter-spacing: -3px;
+        margin: 24px 0;
+      }
+      header p {
+        max-width: 620px;
+      }
+      section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 26px;
+        margin: 50px 0;
+      }
+      article {
+        border-top: 3px solid;
+        padding-top: 20px;
+      }
+      article img {
+        width: 100%;
+        aspect-ratio: 1.5;
+        object-fit: cover;
+        object-position: top;
+        border: 1px solid #ccc;
+      }
+      h2 {
+        font-size: 30px;
+        line-height: 1.1;
+      }
+      a {
+        color: inherit;
+        text-underline-offset: 5px;
+      }
+      article p {
+        font-size: 15px;
+      }
+      footer {
+        font-size: 12px;
+        border-top: 1px solid #ccc;
+        padding-top: 20px;
+      }
+      @media (max-width: 650px) {
+        section {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <small>UNIVERSIDADE DE COIMBRA · DESIGN E MULTIMÉDIA · 2022/23</small>
+        <h1>Visualização<br />de Informação.</h1>
+        <p>
+          Dois projetos com D3.js: uma pergunta sobre automóveis e uma
+          exploração de avistamentos de OVNIs em formato de jornal.
+        </p>
+        <p>Por José Antunes e Ana Inês França.</p>
+      </header>
+      <section>
+        <article>
+          <small>01 / VISUALIZING FACTS</small>
+          <h2>Car Goes Brrr</h2>
+          <a href="Visualizacao_de_Informacao_P1/Projeto_1/src/"
+            ><img
+              src="docs/images/p1.png"
+              alt="Pré-visualização do gráfico de peso e potência dos automóveis"
+          /></a>
+          <p>
+            Uma visualização estática de 406 automóveis: peso, potência, origem
+            e tempo de aceleração, com leitura da relação peso-potência.
+          </p>
+          <a href="Visualizacao_de_Informacao_P1/Projeto_1/src/"
+            >Explorar o projeto →</a
+          >
+        </article>
+        <article>
+          <small>02 / VISUALIZATION AS A TOOL</small>
+          <h2>The Paranormal</h2>
+          <a href="Visualizacao_de_Informacao_P2/Entrega_Final/código/"
+            ><img
+              src="docs/images/p2.png"
+              alt="Pré-visualização do jornal The Paranormal"
+          /></a>
+          <p>
+            Um jornal de dados com 80 332 relatos, mapa, evolução temporal e
+            testemunhos ligados por filtros comuns.
+          </p>
+          <a href="Visualizacao_de_Informacao_P2/Entrega_Final/código/"
+            >Ler o jornal →</a
+          >
+        </article>
+      </section>
+      <footer>
+        Trabalhos orientados por Catarina Maçãs e Evgheni Polisciuc. Relatórios
+        e materiais académicos preservados nas pastas de cada projeto.
+      </footer>
+    </main>
+  </body>
+</html>

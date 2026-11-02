@@ -1,0 +1,59 @@
+@keyframes display {
+    0% {
+        transform: translateX(200px);
+        opacity: 0;
+    }
+
+    2% {
+        opacity: 0;
+    }
+
+    5% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    8% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    10% {
+        opacity: 0;
+    }
+
+    12% {
+        transform: translateX(-300px);
+    }
+
+    100% {
+        transform: translateX(-300px);
+        opacity: 0;
+    }
+}
+
+.commentscarousel {
+    position: relative;
+    margin-left: -100px;
+    margin-top: 70px;
+    width: 400px;
+    height: 300px;
+    font-family: 'EB_Garamond_Regular';
+    font-size: 30px;
+
+    &>p {
+        position: absolute;
+        top: 0;
+        left: calc(50% - 100px);
+        opacity: 0;
+        animation: display 100s infinite;
+    }
+
+    .pic {
+        max-width: 400px;
+    }
+}
+
+.comments_legenda {
+    margin-top: 25px;
+}

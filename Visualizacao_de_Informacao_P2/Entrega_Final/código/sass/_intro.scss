@@ -1,0 +1,28 @@
+.intro {
+    margin-top: 40px;
+    
+    &_title {
+        font-family: 'EB_Garamond_Medium';
+        font-size: 50px;
+    }
+
+    &_authors {
+        font-family: 'EB_Garamond_MediumItalic';
+        font-size: 30px;
+        color: #6D6D6D;
+    }
+
+    &_text {
+        max-width: 450px;
+        margin-top: 40px;
+        font-family: 'EB_Garamond_Regular';
+        font-size: 22px;
+    }
+
+    &_disclaimer {
+        max-width: 450px;
+        margin-top: 40px;
+        font-family: 'EB_Garamond_Regular';
+        font-size: 22px;
+    }
+}
