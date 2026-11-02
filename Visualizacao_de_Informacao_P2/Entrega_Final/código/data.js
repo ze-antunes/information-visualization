@@ -83,25 +83,65 @@ export function aggregateYears(rows, mode, from, to) {
   });
   return { keys, years, totals };
 }
-export function mapCells(rows) {
+// Nested geographic cells split in half at each zoom threshold. At maximum
+// zoom, only reports at exactly the same coordinates remain grouped.
+export const mapLayers = Object.freeze([
+  { minZoom: 1, degrees: 20, name: "World" },
+  { minZoom: 2, degrees: 10, name: "Continental" },
+  { minZoom: 4, degrees: 5, name: "Regional" },
+  { minZoom: 8, degrees: 2.5, name: "Local" },
+  { minZoom: 16, degrees: 1.25, name: "Close-up" },
+  { minZoom: 32, degrees: 0.625, name: "Neighbourhood" },
+  { minZoom: 64, degrees: 0, name: "Report locations" },
+]);
+export function mapLayerIndex(zoom) {
+  let index = 0;
+  while (index + 1 < mapLayers.length && zoom >= mapLayers[index + 1].minZoom)
+    index++;
+  return index;
+}
+export function mapCells(rows, degrees = 5) {
   const groups = new Map();
-  rows
-    .filter((d) => d.located)
-    .forEach((d) => {
-      const lon = Math.min(71, Math.floor((d.longitude + 180) / 5)),
-        lat = Math.min(35, Math.floor((d.latitude + 90) / 5));
-      const key = `${lon},${lat}`;
-      if (!groups.has(key)) groups.set(key, []);
-      groups.get(key).push(d);
-    });
-  return [...groups.values()].map((items) => {
-    const counts = new Map();
-    items.forEach((d) => counts.set(d.shape, (counts.get(d.shape) || 0) + 1));
+  for (const d of rows) {
+    if (!d.located) continue;
+    const lon = degrees
+      ? Math.min(
+          Math.ceil(360 / degrees) - 1,
+          Math.floor((d.longitude + 180) / degrees),
+        )
+      : d.longitude;
+    const lat = degrees
+      ? Math.min(
+          Math.ceil(180 / degrees) - 1,
+          Math.floor((d.latitude + 90) / degrees),
+        )
+      : d.latitude;
+    const key = `${lon},${lat}`;
+    if (!groups.has(key))
+      groups.set(key, {
+        key,
+        count: 0,
+        longitude: 0,
+        latitude: 0,
+        shapes: new Map(),
+      });
+    const cell = groups.get(key);
+    cell.count++;
+    cell.longitude += d.longitude;
+    cell.latitude += d.latitude;
+    cell.shapes.set(d.shape, (cell.shapes.get(d.shape) || 0) + 1);
+  }
+  return [...groups.values()].map((cell) => {
+    const [shape, shapeCount] = [...cell.shapes].sort(
+      (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+    )[0];
     return {
-      count: items.length,
-      longitude: items.reduce((s, d) => s + d.longitude, 0) / items.length,
-      latitude: items.reduce((s, d) => s + d.latitude, 0) / items.length,
-      shape: [...counts].sort((a, b) => b[1] - a[1])[0][0],
+      key: cell.key,
+      count: cell.count,
+      longitude: cell.longitude / cell.count,
+      latitude: cell.latitude / cell.count,
+      shape,
+      shapeCount,
     };
   });
 }

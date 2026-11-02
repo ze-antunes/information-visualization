@@ -5,6 +5,8 @@ import {
   filterRows,
   aggregateYears,
   mapCells,
+  mapLayers,
+  mapLayerIndex,
   durationGroup,
   UNKNOWN,
 } from "../Visualizacao_de_Informacao_P2/Entrega_Final/código/data.js";
@@ -25,6 +27,46 @@ test("explicit US dates reject impossible calendar dates and keep unknown fields
   assert.equal(fixture({ country: "" }).country, UNKNOWN);
   assert.equal(fixture({ latitude: "" }).located, false);
   assert.equal(fixture({ "longitude ": "181" }).located, false);
+});
+
+test("zoom layers split clusters, preserve totals and merge back deterministically", () => {
+  const rows = [
+    fixture({ latitude: "31", "longitude ": "-89", shape: "triangle" }),
+    fixture({ latitude: "31", "longitude ": "-89", shape: "triangle" }),
+    fixture({ latitude: "31.1", "longitude ": "-89.1", shape: "light" }),
+    fixture({ latitude: "39", "longitude ": "-81", shape: "light" }),
+    fixture({ latitude: "39.1", "longitude ": "-81.1", shape: "light" }),
+    fixture({ latitude: "90", "longitude ": "180", shape: "disk" }),
+    fixture({ latitude: "" }),
+  ];
+  let previous = 0;
+  for (const layer of mapLayers) {
+    const cells = mapCells(rows, layer.degrees);
+    assert.equal(
+      cells.reduce((sum, cell) => sum + cell.count, 0),
+      6,
+    );
+    assert.ok(cells.length >= previous);
+    assert.deepEqual(cells, mapCells(rows, layer.degrees));
+    previous = cells.length;
+  }
+  const broad = mapCells(rows, 20).find((cell) => cell.count === 5);
+  assert.equal(broad.shape, "light");
+  assert.equal(broad.shapeCount, 3);
+  assert.equal(
+    mapCells(rows, 0).find((cell) => cell.count === 2).shape,
+    "triangle",
+  );
+  for (const [index, layer] of mapLayers.entries()) {
+    assert.equal(mapLayerIndex(layer.minZoom), index);
+    if (index) assert.equal(mapLayerIndex(layer.minZoom - 0.001), index - 1);
+  }
+});
+
+test("dominant-shape ties are independent of report order", () => {
+  const rows = [fixture({ shape: "triangle" }), fixture({ shape: "circle" })];
+  assert.equal(mapCells(rows, 20)[0].shape, "circle");
+  assert.equal(mapCells(rows.reverse(), 20)[0].shape, "circle");
 });
 test("duration bins cover boundaries, missing and negative durations", () => {
   for (const [value, expected] of [

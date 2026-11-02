@@ -430,3 +430,46 @@ footer p {
     11px/1.6 Arial,
     sans-serif;
 }
+
+.map-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  border-bottom: 1px solid #d1cbbb;
+}
+.map-controls button {
+  font-size: 20px;
+  min-width: 40px;
+  padding: 4px 10px;
+}
+#map-layer {
+  font:
+    11px/1.5 Arial,
+    sans-serif;
+  margin-left: 5px;
+}
+.sighting {
+  cursor: pointer;
+}
+.sighting:focus {
+  outline: none;
+}
+.sighting:focus circle,
+.sighting:hover circle {
+  stroke: #9e502a;
+  stroke-width: 2px;
+  fill: #fffaf0;
+}
+.cluster-count {
+  font:
+    bold 10px Arial,
+    sans-serif;
+  fill: #24231f;
+  paint-order: stroke;
+  stroke: #f4f0e6;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}

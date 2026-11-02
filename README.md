@@ -25,7 +25,9 @@ An interactive newspaper explores **80,332 UFO reports**, dated **1906–2014**,
 ![Sighting geography](docs/images/p2.png)
 
 - Shared country, shape and inclusive year filters update every view.
-- Original shape icons by José Antunes group reports into 5° geographic cells. Each drawing represents the most common shape. Icon bounding-box area scales with count, with a minimum size for readability; exact counts are in tooltips. Size recalculates after filtering. The question-mark artwork represents other or unknown categories without changing the underlying data.
+- Seven progressive map layers split geographic clusters as you zoom: 20°, 10°, 5°, 2.5°, 1.25°, 0.625°, then exact report coordinates at 64×. Zooming out merges them again. Each cluster uses José Antunes’s original icon for its most frequent reported shape, computed from the underlying reports rather than a vote among child clusters. Ties are resolved alphabetically.
+- Cluster counts are explicit. Icon bounding-box area scales with count within each layer, with a minimum size for readability. Icons keep their on-screen size while zooming; only visible clusters are drawn. Filters invalidate the cached layers. Coincident report locations stay grouped at maximum zoom.
+- Select a cluster, press Enter/Space, use the +/− buttons or scroll/pinch to explore. The current layer and visible cluster count appear above the map. The question mark represents other or unknown shapes without changing the underlying categories.
 - Local world outline, pan/zoom, reset and an illustrated legend. Shape-mode streamgraph legends also use the original icons.
 - Streamgraph grouped by country, shape or duration, with complete year bins and a dynamic vertical domain.
 - Eight categories plus a **Remaining categories** bucket preserve the long tail. Duration uses ranges instead of selected exact values.
