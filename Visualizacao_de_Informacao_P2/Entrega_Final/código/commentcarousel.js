@@ -1,8 +1,9 @@
 import { label } from "./data.js";
-export function createWitnesses(onSelect = () => {}) {
+export function createWitnesses(onSelect = () => {}, onFocusEnd = () => {}) {
   let rows = [],
     index = 0,
     playing = false,
+    selectionActive = false,
     timer,
     hovered = false,
     focused = false;
@@ -30,7 +31,7 @@ export function createWitnesses(onSelect = () => {}) {
   quote.tabIndex = 0;
   quote.setAttribute(
     "aria-label",
-    "Explore reports with the same country and shape as this witness",
+    "Show this event across the page until its interval ends",
   );
   const select = () => {
     if (rows[index]) onSelect(rows[index]);
@@ -50,7 +51,7 @@ export function createWitnesses(onSelect = () => {}) {
   }
   function paintClock() {
     const left = remaining(),
-      ended = !rows.length || index === rows.length - 1;
+      ended = !selectionActive && (!rows.length || index === rows.length - 1);
     const fraction = ended
       ? 0
       : Math.min(1, Math.max(0, 1 - left / (intervalSeconds * 1000)));
@@ -58,7 +59,7 @@ export function createWitnesses(onSelect = () => {}) {
     track.setAttribute("aria-valuenow", String(Math.round(fraction * 100)));
     const text = ended
       ? "No next account"
-      : `${startedAt === null ? "Paused" : "Next account in"} · ${Math.ceil(left / 1000)} s`;
+      : `${startedAt === null ? "Paused" : selectionActive ? "Full sample in" : "Next account in"} · ${Math.ceil(left / 1000)} s`;
     if (countdown.textContent !== text) countdown.textContent = text;
     track.setAttribute("aria-valuetext", text);
   }
@@ -71,10 +72,18 @@ export function createWitnesses(onSelect = () => {}) {
   function schedule(reset = false) {
     stopClock();
     if (reset) remainingMs = intervalSeconds * 1000;
-    if (playing && !hovered && !focused && index < rows.length - 1) {
+    if (
+      playing &&
+      (selectionActive || (!hovered && !focused)) &&
+      (selectionActive || index < rows.length - 1)
+    ) {
       startedAt = performance.now();
       timer = setTimeout(() => {
         stopClock();
+        if (selectionActive) {
+          onFocusEnd();
+          return;
+        }
         index++;
         render();
         schedule(true);
@@ -90,8 +99,9 @@ export function createWitnesses(onSelect = () => {}) {
   function render() {
     previous.disabled = !rows.length || index === 0;
     next.disabled = !rows.length || index === rows.length - 1;
-    playback.textContent =
-      playing && index < rows.length - 1
+    playback.textContent = selectionActive
+      ? "Selected reports · the full 80,332-report sample returns when this interval ends"
+      : playing && index < rows.length - 1
         ? `Playing in order · one account every ${intervalSeconds} seconds · pauses while you read here`
         : index === rows.length - 1 && rows.length > 0
           ? "End of this edition’s witness accounts"
@@ -146,6 +156,10 @@ export function createWitnesses(onSelect = () => {}) {
     schedule();
   });
   return {
+    setSelection(value) {
+      selectionActive = value;
+      schedule(true);
+    },
     setInterval(seconds) {
       if (!Number.isInteger(seconds) || seconds < 1 || seconds > 120)
         return false;

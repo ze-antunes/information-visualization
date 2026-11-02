@@ -40,14 +40,21 @@ const status = document.querySelector("#status");
     }
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let selection = null,
-      playing = false;
+      playing = false,
+      beforeFocusPlaying = false;
     const banner = document.querySelector("#story-status");
     const toggle = document.querySelector("#story-toggle");
     const overviewButton = document.querySelector("#story-overview");
     const story = createStory({
       onChange(next) {
+        const wasSelected = !!selection;
+        if (next && !selection) beforeFocusPlaying = playing;
         selection = next;
         update();
+        if (next || wasSelected) {
+          witnesses.setSelection(!!selection);
+          setPlaying(selection ? true : beforeFocusPlaying);
+        }
       },
     });
     const map = createMap(world, (cell) =>
@@ -56,14 +63,26 @@ const status = document.querySelector("#status");
         `Map cluster · ${cell.count.toLocaleString("en")} reports · ${cell.shape}`,
       ),
     );
-    const witnesses = createWitnesses((row) =>
-      story.focus(
-        filterRows(rows, state).filter(
-          (d) => d.country === row.country && d.shape === row.shape,
+    const witnesses = createWitnesses(
+      (row) =>
+        story.focus(
+          [row],
+          `Event · ${row.city} · ${row.datetime} · ${row.shape}`,
         ),
-        `${label(row.country)} · ${row.shape} · related witness reports`,
-      ),
+      () => restoreFullSample(),
     );
+    function restoreFullSample() {
+      Object.assign(state, {
+        country: "",
+        shape: "",
+        from: extent[0],
+        to: extent[1],
+      });
+      for (const field of ["country", "shape", "from", "to"])
+        document.getElementById(field).value = state[field];
+      map.reset();
+      story.overview();
+    }
     const intervalInput = document.querySelector("#playback-interval");
     let intervalSeconds = 15;
     try {
@@ -161,7 +180,7 @@ const status = document.querySelector("#status");
       refreshBanner();
     }
     toggle.addEventListener("click", () => setPlaying(!playing));
-    overviewButton.addEventListener("click", () => story.overview());
+    overviewButton.addEventListener("click", restoreFullSample);
     document.addEventListener("visibilitychange", () =>
       witnesses.setPlaying(playing && !document.hidden),
     );
@@ -173,7 +192,7 @@ const status = document.querySelector("#status");
       toggle.setAttribute("aria-pressed", String(playing));
       overviewButton.disabled = !selection;
       banner.textContent = selection
-        ? `${selection.title} · selection held until you choose “Show my edition”`
+        ? `${selection.title} · returns to the full 80,332-report sample when the interval ends`
         : "One edition · use the filters or select data to change this set";
       document.querySelector("#story").dataset.playing = String(playing);
       document.querySelector("#story").dataset.focused = String(!!selection);
